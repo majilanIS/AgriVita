@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
   return (
@@ -12,14 +13,14 @@ const HeroSection = () => {
           Detect crop diseases instantly, monitor weather conditions, and improve farming decisions with AgriVita's modern-organic precision platform.
         </p>
         <div className="hero-buttons">
-          <button className="btn btn-primary">
+          <Link to="/dashboard" className="btn btn-primary">
             Get Started 
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </button>
-          <button className="btn btn-secondary">
+          </Link>
+          <Link to="/dashboard/scan/disease" className="btn btn-secondary">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><circle cx="12" cy="12" r="3"/></svg>
             Scan Crop
-          </button>
+          </Link>
         </div>
       </div>
       <div className="hero-visuals">

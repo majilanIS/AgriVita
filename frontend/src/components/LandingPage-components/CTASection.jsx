@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const CTASection = () => {
   return (
@@ -6,9 +7,9 @@ const CTASection = () => {
       <div className="cta-card">
         <h2>Ready to modernize your harvest?</h2>
         <p>Join thousands of farmers who are already making smarter, data-driven decisions with AgriVita.</p>
-        <button className="btn btn-primary">
+        <Link to="/dashboard" className="btn btn-primary">
           Get AgriVita Free
-        </button>
+        </Link>
       </div>
     </section>
   );
