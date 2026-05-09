@@ -3,10 +3,15 @@ import base64
 import httpx
 from typing import Literal
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException, File, UploadFile, Form
+from fastapi import FastAPI, HTTPException, File, UploadFile, Form, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
 from groq import Groq
+
+from db import get_db
+from models import User
+from auth import hash_password, verify_password, create_access_token, create_refresh_token, verify_token
 
 # Load environment variables
 load_dotenv()
@@ -41,6 +46,19 @@ CROP_HEALTH_API_URL = "https://crop.kindwise.com/api/v1"
 
 # ==================== Pydantic Models ====================
 
+class RegisterRequest(BaseModel):
+    email: str
+    password: str
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+class AuthResponse(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
+
 class AnalysisRequest(BaseModel):
     """Request model for image analysis"""
     image: str  # Base64 encoded image or URL
@@ -68,6 +86,29 @@ class AnalysisResponse(BaseModel):
 
 
 # ==================== Helper Functions ====================
+
+def get_token_from_header(authorization: str | None = Header(None)) -> str:
+    """Extract and validate token from Authorization header"""
+    if not authorization:
+        raise HTTPException(status_code=401, detail="Missing authorization header")
+    
+    parts = authorization.split()
+    if len(parts) != 2 or parts[0].lower() != "bearer":
+        raise HTTPException(status_code=401, detail="Invalid authorization header format")
+    
+    return parts[1]
+
+def authenticate_user(token: str = Depends(get_token_from_header), db: Session = Depends(get_db)) -> str:
+    """Authenticate user from token"""
+    email = verify_token(token)
+    if not email:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+    
+    return email
 
 async def call_insect_api(image: str) -> dict:
     """Call Kindwise Insect.id API for insect identification"""
@@ -223,13 +264,51 @@ IMPORTANT: Return ONLY strings for each field - no arrays, no objects, no lists.
         )
 
 
-# ==================== API Endpoint ====================
+# ==================== Auth Endpoints ====================
+
+@app.post("/register", response_model=AuthResponse)
+def register(request: RegisterRequest, db: Session = Depends(get_db)):
+    """Register a new user and return access and refresh tokens"""
+    
+    # Check if user already exists
+    existing_user = db.query(User).filter(User.email == request.email).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    
+    # Create new user
+    user = User(email=request.email, password=hash_password(request.password))
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    
+    # Generate tokens
+    access_token = create_access_token(user.email)
+    refresh_token = create_refresh_token(user.email)
+    
+    return AuthResponse(access_token=access_token, refresh_token=refresh_token)
+
+@app.post("/login", response_model=AuthResponse)
+def login(request: LoginRequest, db: Session = Depends(get_db)):
+    """Login user and return access and refresh tokens"""
+    
+    user = db.query(User).filter(User.email == request.email).first()
+    if not user or not verify_password(request.password, user.password):
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    
+    # Generate tokens
+    access_token = create_access_token(user.email)
+    refresh_token = create_refresh_token(user.email)
+    
+    return AuthResponse(access_token=access_token, refresh_token=refresh_token)
+
+# ==================== API Endpoints ====================
 
 @app.post("/analyze", response_model=AnalysisResponse)
 async def analyze_image(
     type: Literal["insect", "disease"] = Form(...),
     file: UploadFile | None = File(None),
     image: str | None = Form(None),
+    email: str = Depends(authenticate_user),
 ):
     """
     Analyze an image for insects or diseases.
