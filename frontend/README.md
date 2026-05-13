@@ -434,4 +434,3 @@ Where to go next
 License
 - MIT (project-level license should be managed at repository root)
 
-Happy hacking — open an issue or ask me to implement the backend upload integration.
