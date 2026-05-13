@@ -1,4 +1,4 @@
-:root {
+css_content = r""":root {
   --primary-green: #105928;
   --primary-green-hover: #0c421d;
   --light-green: #a7f3d0;
@@ -23,13 +23,6 @@
 
 html {
   scroll-behavior: smooth;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-html::-webkit-scrollbar {
-  display: none;
-  width: 0;
 }
 
 body {
@@ -38,14 +31,6 @@ body {
   color: var(--text-dark);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-y: scroll;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-body::-webkit-scrollbar {
-  display: none;
-  width: 0;
 }
 
 .landing-page {
@@ -401,7 +386,7 @@ body::-webkit-scrollbar {
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 2rem;
   margin-top: 3rem;
 }
@@ -854,11 +839,6 @@ body::-webkit-scrollbar {
     width: calc(50% - 0.75rem);
   }
 
-  .features-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-  }
-
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
@@ -1159,3 +1139,9 @@ body::-webkit-scrollbar {
     display: none;
   }
 }
+"""
+
+with open(r"d:\agrivita\frontend\src\pages\LandingPage.css", "w", encoding="utf-8") as f:
+    f.write(css_content)
+
+print("CSS file updated successfully!")

@@ -17,24 +17,24 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
 
 
-def create_access_token(email: str) -> str:
+def create_access_token(phone_number: str) -> str:
     expires_at = datetime.now(timezone.utc) + timedelta(days=ACCESS_TOKEN_EXPIRE_DAYS)
-    to_encode = {"sub": email, "exp": expires_at}
+    to_encode = {"sub": phone_number, "exp": expires_at}
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
-def create_refresh_token(email: str) -> str:
+def create_refresh_token(phone_number: str) -> str:
     expires_at = datetime.now(timezone.utc) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
-    to_encode = {"sub": email, "exp": expires_at}
+    to_encode = {"sub": phone_number, "exp": expires_at}
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
 def verify_token(token: str) -> str:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
-        if email is None:
+        phone_number: str = payload.get("sub")
+        if phone_number is None:
             return None
-        return email
+        return phone_number
     except JWTError:
         return None

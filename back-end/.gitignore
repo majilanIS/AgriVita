@@ -1,0 +1,56 @@
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment variables
+.env
+
+# FastAPI / logs
+*.log
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Pytest
+.pytest_cache/
+
+# Mypy
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
+
+# Coverage
+.coverage
+htmlcov/
+
+# Build files
+dist/
+build/
+*.egg-info/
+
+# SQLite databases
+*.db
+*.sqlite3
+
+# Uploads
+uploads/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Temporary files
+tmp/
+temp/

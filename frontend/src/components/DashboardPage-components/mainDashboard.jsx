@@ -153,11 +153,11 @@ const MainDashboard = () => {
   return (
     <main
       style={{
-        marginLeft: '200px',
-        minHeight: '100vh',
+        minHeight: '100%',
         backgroundColor: '#f2f6ed',
         padding: '32px 36px 48px',
         fontFamily: "'DM Sans', sans-serif",
+        boxSizing: 'border-box',
       }}
     >
       {/* ── Top Header ── */}

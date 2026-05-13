@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
-const WEATHER_API_KEY = "demo";
+const VITE_WEATHER_API_KEY = "demo";
 
 const ETHIOPIAN_LOCATIONS = [
   { name: "Addis Ababa", lat: 9.0320, lon: 38.7469, region: "Central Ethiopia", zone: "Addis Ababa City" },

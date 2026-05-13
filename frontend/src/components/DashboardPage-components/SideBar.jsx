@@ -72,6 +72,7 @@ const navItems = [
 const SideBar = () => {
   const location = useLocation();
   const [expandedItem, setExpandedItem] = useState(null);
+  const [isAnalysisMenuOpen, setIsAnalysisMenuOpen] = useState(false);
 
   return (
     <aside
@@ -122,8 +123,10 @@ const SideBar = () => {
       {/* Nav Items */}
       <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
         {navItems.map((item) => {
-          const isActive = location.pathname === item.path || location.pathname.startsWith(item.path.split('/').slice(0, -1).join('/'));
           const hasSubItems = item.subItems && item.subItems.length > 0;
+          const isActive = hasSubItems
+            ? item.subItems.some((subItem) => location.pathname === subItem.path)
+            : location.pathname === item.path;
           const isExpanded = expandedItem === item.label;
 
           return (
@@ -261,32 +264,91 @@ const SideBar = () => {
       </nav>
 
       {/* New Analysis Button */}
-      <button
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '8px',
-          padding: '12px',
-          borderRadius: '12px',
-          border: 'none',
-          cursor: 'pointer',
-          background: 'linear-gradient(135deg, #4a9456, #2d6b3e)',
-          color: '#ffffff',
-          fontWeight: 600,
-          fontSize: '14px',
-          fontFamily: "'DM Sans', sans-serif",
-          boxShadow: '0 4px 12px rgba(45,107,62,0.3)',
-          transition: 'all 0.2s ease',
-        }}
-        onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 6px 16px rgba(45,107,62,0.4)' }}
-        onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(45,107,62,0.3)' }}
+      <div
+        style={{ position: 'relative', marginTop: 'auto', paddingTop: '10px' }}
+        onMouseEnter={() => setIsAnalysisMenuOpen(true)}
+        onMouseLeave={() => setIsAnalysisMenuOpen(false)}
       >
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
-          <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/>
-        </svg>
-        New Analysis
-      </button>
+        <button
+          onClick={() => setIsAnalysisMenuOpen((prev) => !prev)}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            padding: '12px',
+            borderRadius: '12px',
+            border: 'none',
+            cursor: 'pointer',
+            width: '100%',
+            background: 'linear-gradient(135deg, #4a9456, #2d6b3e)',
+            color: '#ffffff',
+            fontWeight: 600,
+            fontSize: '14px',
+            fontFamily: "'DM Sans', sans-serif",
+            boxShadow: '0 4px 12px rgba(45,107,62,0.3)',
+            transition: 'all 0.2s ease',
+          }}
+        >
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+            <path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"/>
+          </svg>
+          New Analysis
+        </button>
+
+        {isAnalysisMenuOpen && (
+          <div
+            style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              bottom: '52px',
+              backgroundColor: '#ffffff',
+              border: '1px solid #dce8d5',
+              borderRadius: '10px',
+              boxShadow: '0 10px 24px rgba(45,107,62,0.14)',
+              padding: '6px',
+              zIndex: 60,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px',
+            }}
+          >
+            <Link
+              to="/dashboard/profit"
+              onClick={() => setIsAnalysisMenuOpen(false)}
+              style={{
+                textDecoration: 'none',
+                padding: '8px 10px',
+                borderRadius: '7px',
+                color: location.pathname === '/dashboard/profit' ? '#2d6b3e' : '#5f7461',
+                backgroundColor: location.pathname === '/dashboard/profit' ? '#e8f5e2' : 'transparent',
+                fontWeight: location.pathname === '/dashboard/profit' ? 600 : 500,
+                fontSize: '13px',
+                fontFamily: "'DM Sans', sans-serif",
+              }}
+            >
+              AgriProfit
+            </Link>
+            <Link
+              to="/dashboard/fertilizer"
+              onClick={() => setIsAnalysisMenuOpen(false)}
+              style={{
+                textDecoration: 'none',
+                padding: '8px 10px',
+                borderRadius: '7px',
+                color: location.pathname === '/dashboard/fertilizer' ? '#2d6b3e' : '#5f7461',
+                backgroundColor: location.pathname === '/dashboard/fertilizer' ? '#e8f5e2' : 'transparent',
+                fontWeight: location.pathname === '/dashboard/fertilizer' ? 600 : 500,
+                fontSize: '13px',
+                fontFamily: "'DM Sans', sans-serif",
+              }}
+            >
+              Fertilizer Expert
+            </Link>
+          </div>
+        )}
+      </div>
     </aside>
   )
 }
