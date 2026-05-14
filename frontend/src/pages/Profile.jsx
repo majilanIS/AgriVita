@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-
-const API_BASE = "http://localhost:8000";
+import { API_BASE } from "../utils/api";
 
 // ─── Toast (same as auth) ────────────────────────────────────────────────────
 const toast = (() => {

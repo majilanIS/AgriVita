@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
-
-const API_BASE = "http://localhost:8000";
+import { API_BASE } from "../utils/api";
 
 const toast = (() => {
   let container = null;

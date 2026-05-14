@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+import { API_BASE } from '../utils/api'
 
 /* ════════════════════════════════════════════
    SCANNING OVERLAY
@@ -164,7 +165,7 @@ const ScanComp = ({ scanType = 'disease' }) => {
       formData.append('file', imgFile)
       formData.append('type', scanType)
 
-      const res = await fetch('http://127.0.0.1:8000/analyze', {
+      const res = await fetch(`${API_BASE}/analyze`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

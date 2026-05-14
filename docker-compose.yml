@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: agrivita-postgres
+    environment:
+      POSTGRES_USER: agrivita
+      POSTGRES_PASSWORD: agrivita_password
+      POSTGRES_DB: agrivita_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agrivita"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    image: chekoledocker/agrivita-backend:latest
+    container_name: agrivita-backend
+    env_file:
+      - back-end/.env
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://agrivita:agrivita_password@postgres:5432/agrivita_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./back-end/uploads:/app/uploads
+
+volumes:
+  postgres_data:

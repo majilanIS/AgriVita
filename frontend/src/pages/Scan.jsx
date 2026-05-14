@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { API_BASE } from '../utils/api';
 
 const SCAN_DATA = {
   disease: {
@@ -136,7 +137,7 @@ const Scan = () => {
       const backendType = activeType === 'pest' ? 'insect' : 'disease';
       formData.append('type', backendType);
 
-      const res = await fetch('http://127.0.0.1:8000/analyze', {
+      const res = await fetch(`${API_BASE}/analyze`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
