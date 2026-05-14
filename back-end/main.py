@@ -55,6 +55,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.get("/")
+def root():
+    return {
+        "message": "Agrivita Smart Agriculture API is running",
+        "docs": "/docs",
+        "health": "/health",
+    }
+
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
 # Initialize Groq client lazily-safe (avoid startup crash if key is missing)
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 groq_client = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None

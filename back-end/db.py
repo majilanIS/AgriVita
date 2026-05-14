@@ -1,10 +1,14 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
 import os
 
-DATABASE_URL = "postgresql://postgres:chekole1221@localhost:5432/agrivita_db"
+from sqlalchemy import create_engine
+from sqlalchemy.orm import declarative_base, sessionmaker
 
-engine = create_engine(DATABASE_URL)
+
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./agrivita.db")
+
+engine_kwargs = {"connect_args": {"check_same_thread": False}} if DATABASE_URL.startswith("sqlite") else {}
+
+engine = create_engine(DATABASE_URL, **engine_kwargs)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
