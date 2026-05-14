@@ -6,7 +6,7 @@ import Dashboard from './pages/Dashboard.jsx';
 import Weather from './pages/Weather.jsx';
 import Profile from './pages/Profile.jsx';
 import History from './pages/History.jsx';
-import MainDashboard from './components/DashboardPage-components/MainDashboard.jsx';
+import MainDashboard from './components/DashboardPage-components/mainDashboard.jsx';
 import NotFound from './pages/NotFound.jsx';
 import Scan from './pages/Scan.jsx';
 import AgriVitaAuth from './pages/AgriVitaAuth.jsx';
