@@ -47,9 +47,18 @@ if not os.path.exists(UPLOAD_DIR):
 app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 # Add CORS middleware
+# Configure CORS origins from environment to avoid wildcard in production.
+raw_origins = os.getenv("FRONTEND_ORIGINS", "")
+if raw_origins:
+    origins = [o.strip() for o in raw_origins.split(',') if o.strip()]
+else:
+    # Fallback to environment-provided VERCEL_URL or allow localhost for local dev
+    vercel_url = os.getenv("VERCEL_URL")
+    origins = [f"https://{vercel_url}"] if vercel_url else ["http://localhost:5173", "http://localhost:3000"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
