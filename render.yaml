@@ -1,0 +1,9 @@
+# Render infra-as-code to deploy the frontend as a Static Site
+# This builds the Vite app in `frontend` and publishes `frontend/dist`.
+static_sites:
+  - name: agrivita-frontend
+    branch: main
+    plan: free
+    buildCommand: "cd frontend && npm ci && npm run build"
+    publishPath: "frontend/dist"
+    healthCheckPath: "/"

@@ -1,0 +1,16 @@
+FROM node:24-alpine
+WORKDIR /app
+
+# Development image: install deps and run vite dev server
+ENV NODE_ENV=development
+COPY package.json package-lock.json ./
+RUN npm ci --silent
+
+# Copy source
+COPY . .
+
+EXPOSE 5173
+
+COPY scripts ./scripts
+RUN chmod +x ./scripts/dev-start.cjs || true
+CMD ["node", "./scripts/dev-start.cjs"]
